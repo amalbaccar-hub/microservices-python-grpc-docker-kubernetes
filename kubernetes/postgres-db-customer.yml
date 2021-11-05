@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-customer
+  labels:
+    app: postgres-customer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-customer
+  template:
+    metadata:
+      labels:
+        app: postgres-customer
+    spec:
+      containers:
+        - name: postgres-customer
+          image: postgres:latest
+          ports:
+            - containerPort: 54321
+          env:
+            - name: POSTGRES_DB
+              value: customer
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret-config
+                  key: password
+            - name: PGDATA
+              value: /data/pgdata
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-customer-service
+spec:
+  selector:
+    app: postgres-customer
+  ports:
+    - port: 54321
+      targetPort: 54321

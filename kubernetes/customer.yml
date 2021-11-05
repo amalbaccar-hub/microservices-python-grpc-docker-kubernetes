@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer
+  labels:
+    app: customer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer
+  template:
+    metadata:
+      labels:
+        app: customer
+    spec:
+      containers:
+        - name: customer
+          image: amalbaccar/python-grpc-microservices-customer:0.1
+          ports:
+            - containerPort: 50051
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: customer-db-configmap
+                  key: database_url
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret-config
+                  key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer
+spec:
+  selector:
+    app: customer
+  ports:
+    - protocol: TCP
+      port: 50051
+      targetPort: 50051

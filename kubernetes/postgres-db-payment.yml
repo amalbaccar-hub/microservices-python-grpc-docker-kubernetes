@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-payment
+  labels:
+    app: postgres-payment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-payment
+  template:
+    metadata:
+      labels:
+        app: postgres-payment
+    spec:
+      containers:
+        - name: postgres-payment
+          image: postgres:latest
+          ports:
+            - containerPort: 54322
+          env:
+            - name: POSTGRES_DB
+              value: payment
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret-config
+                  key: password
+            - name: PGDATA
+              value: /data/pgdata
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-payment-service
+spec:
+  selector:
+    app: postgres-payment
+  ports:
+    - port: 54322
+      targetPort: 54322

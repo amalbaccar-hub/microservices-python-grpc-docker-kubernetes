@@ -1,0 +1,100 @@
+version: "3.10"
+
+services:
+  customer:
+    build:
+      context: .
+      dockerfile: customer/Dockerfile
+    depends_on:
+      - postgres_customer
+    environment:
+      - PAYMENT_HOST=payment
+      - DB_HOST=postgres_customer
+      - DB_PASSWORD_FILE=/run/secrets/db-password-customer
+      - API_HOST=customer
+      - PYTHONDONTWRITEBYTECODE=1
+      - GRPC_VERBOSITY=DEBUG
+    image: customer
+    networks:
+      - microservices
+    volumes:
+      - ./customer/src:/service/src/
+    secrets:
+      - db-password-customer
+    ports:
+      - "50051:50051"
+    command: -p 127.0.0.1:50051:50051/tcp
+
+  postgres_customer:
+    image: postgres:13
+    container_name: postgres_customer
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password-customer
+      - POSTGRES_DB=customer
+    expose:
+      - "54321"
+    networks:
+      - microservices
+    volumes:
+      - ./data/db/customer_db:/var/lib/postgresql/data
+    secrets:
+      - db-password-customer
+    ports:
+      - "54321:54321"
+    command: -p 54321
+
+  payment:
+    build:
+      context: .
+      dockerfile: payment/Dockerfile
+    depends_on:
+      - postgres_payment
+    environment:
+      - CUSTOMER_HOST=customer
+      - DB_HOST=postgres_payment
+      - DB_PASSWORD_FILE=/run/secrets/db-password-payment
+      - API_HOST=payment
+      - PYTHONDONTWRITEBYTECODE=1
+      - GRPC_VERBOSITY=DEBUG
+      - STRIPE_PUBLISHABLE_KEY=pk_test_51JVzAtFWPVHBScNc9v5pnZHdIWSxk99WcMiPdVBR1kEXSX5MwdKV7R7VeLIYZkHSRWCUF2P9B0G95V0gdrFvRDki00DU1ECRJM
+      - STRIPE_SECRET_KEY=sk_test_51JVzAtFWPVHBScNcmkJCCnTJEFKlQtverK6qBxlvoY0mcXxBLbkmCEwP5HdL9rTOJPzEDmFGMagDHcNkf72dXYeE00bkeZPfLm
+    image: payment
+    networks:
+      - microservices
+    volumes:
+      - ./payment/src:/service/src/
+    secrets:
+      - db-password-payment
+    ports:
+      - "50053:50053"
+    command: -p 127.0.0.1:50053:50053/tcp
+
+  postgres_payment:
+    image: postgres:13
+    container_name: postgres_payment
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password-payment
+      - POSTGRES_DB=payment
+    expose:
+      - "54322"
+    networks:
+      - microservices
+    volumes:
+      - ./data/db/payment_db:/var/lib/postgresql/data
+    secrets:
+      - db-password-payment
+    ports:
+      - "54322:54322"
+    command: -p 54322
+
+
+
+networks:
+  microservices:
+secrets:
+  db-password-payment:
+    file: ./payment/password.txt
+  db-password-customer:
+    file: ./customer/password.txt

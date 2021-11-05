@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment
+  labels:
+    app: payment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      containers:
+        - name: payment
+          image: amalbaccar/python-grpc-microservices-payment:0.1
+          ports:
+            - containerPort: 50053
+          env:
+            - name: CUSTOMER_HOST
+              value: customer
+            - name: STRIPE_PUBLISHABLE_KEY
+              value: pk_test_51JVzAtFWPVHBScNc9v5pnZHdIWSxk99WcMiPdVBR1kEXSX5MwdKV7R7VeLIYZkHSRWCUF2P9B0G95V0gdrFvRDki00DU1ECRJM
+            - name: STRIPE_SECRET_KEY
+              value: sk_test_51JVzAtFWPVHBScNcmkJCCnTJEFKlQtverK6qBxlvoY0mcXxBLbkmCEwP5HdL9rTOJPzEDmFGMagDHcNkf72dXYeE00bkeZPfLm
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: ayment-db-configmap
+                  key: database_url
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret-config
+                  key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment
+spec:
+  selector:
+    app: payment
+  ports:
+    - protocol: TCP
+      port: 50053
+      targetPort: 50053
