@@ -11,5 +11,5 @@ The payment microservice interact with the customer microservice to retrieve inf
 ## Building the containers
 - make build
 - make up\
-**OR**\
+**OR**
 - make all # builds and brings containers up
