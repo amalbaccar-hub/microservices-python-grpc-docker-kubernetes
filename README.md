@@ -9,7 +9,7 @@ The payment microservice interact with the customer microservice to retrieve inf
 * docker with docker-compose
 
 ## Building the containers
-make build
-make up
-OR
-make all # builds and brings containers up
+- make build
+- make up
+**OR**
+- make all # builds and brings containers up
