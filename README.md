@@ -13,3 +13,8 @@ The payment microservice interact with the customer microservice to retrieve inf
 - make up\
 **OR**
 - make all # builds and brings containers up
+
+## Using secrets for docker containers
+Among the best practices, it's recommended to use secrets to protect sensitive data such as database credentials.
+You'll find a file named 'password.txt' under customer and payment folders, that's aimed to contain the postgres database password. Put yours there.
+check 'docker-compose.yml' to see how to use secrets.
