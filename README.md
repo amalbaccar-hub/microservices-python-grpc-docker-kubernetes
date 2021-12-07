@@ -28,3 +28,9 @@ Among the best practices, it's recommended to use secrets to protect sensitive d
 You'll find a file named 'password.txt' under customer and payment folders, that's aimed to contain the postgres database password. Put yours there.
 check 'docker-compose.yml' to see how to use secrets.\
 In real world applications, such files **MUST NOT BE COMMITED** to subversion control. It's just there for demo purposes. 
+
+## Architecture diagram
+TODO
+
+## Project structure
+TODO
