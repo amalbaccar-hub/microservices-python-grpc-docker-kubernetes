@@ -14,6 +14,15 @@ The payment microservice interacts with the customer microservice to retrieve in
 **OR**
 - make all # builds and brings containers up
 
+## Creating a local virtualenv (optional)
+
+python3.9 -m venv .venv && source .venv/bin/activate
+1. cd customer
+2. pip install -r requirements.txt
+3. pip install -e src/
+
+Repeat same steps (from 1 to 3) for payment microservice.
+
 ## Using secrets for docker containers
 Among the best practices, it's recommended to use secrets to protect sensitive data such as database credentials.
 You'll find a file named 'password.txt' under customer and payment folders, that's aimed to contain the postgres database password. Put yours there.
