@@ -30,7 +30,7 @@ check 'docker-compose.yml' to see how to use secrets.\
 In real world applications, such files **MUST NOT BE COMMITED** to subversion control. It's just there for demo purposes. 
 
 ## Architecture diagram
-TODO
+![alt text](global_architecture_diagram.jpg)
 
 ## Project structure
 TODO
