@@ -1,7 +1,7 @@
 # Example application code for microservices with python, grpc, docker and kubernetes
 the goal of this example is mainly to learn and test grpc, docker and kubernetes. So to keep things manageable, I defined only two microservices:
 1. **Customer**: is a microservice that registers a new customer and performs basic CRUD operations around the customer.
-2. **Payment**: is a microservice that basically executes a payment and some CRUD operations related to it.
+2. **Payment**: is a microservice that basically executes a payment, and some CRUD operations related to it.
 The payment microservice interacts with the customer microservice to retrieve information about the customer. 
 
 ## Requirements
@@ -27,29 +27,29 @@ Repeat same steps (from 1 to 3) for payment microservice.
 Among the best practices, it's recommended to use secrets to protect sensitive data such as database credentials.
 You'll find a file named 'password.txt' under customer and payment folders, that's aimed to contain the postgres database password. Put yours there.
 check 'docker-compose.yml' to see how to use secrets.\
-In real world applications, such files **MUST NOT BE COMMITED** to subversion control. It's just there for demo purposes. 
+In real world applications, such files **MUST NOT BE COMMITTED** to subversion control. It's just there for demo purposes. 
 
 ## Architecture diagram
 ![](global_architecture_diagram.png)
 
-Database per service pattern was adopted.
+We adopted database per service pattern.
 
 ## Project structure
 ### customer and payment folders
-Each microservice was put in a seperate directory/package. Same approach was used internally for both microservices in order to build their architecture.
-Two key design patterns were applied: 
+We put each microservice in a separate directory/package. The same approach was used internally for both microservices in order to build their architecture.
+We applied two key design patterns : 
 - The **repository pattern**: is an abstraction over data storage. It decouples the domain model layer from the data layer making the system more testable and hiding the complexities of the database. 
-- The **service layer pattern**: the role of service layer is to seperate **'stuff that talks http or http/2'** from **'stuff that talks domain models'**. 
+- The **service layer pattern**: the role of service layer is to separate **'stuff that talks http or http/2'** from **'stuff that talks domain models'**. 
 It's also known as **orchestration pattern** because it's mission is in general to orchestrate operations and workflows of the system. 
 Typical service layer function performs the following steps:
-1. Fetching stuff out of the repository.
-2. Validating the input and making assertions about the request against the current database state.
-3. Calling a service.
-4. If everything works well, save/update the new state.
+    1. Fetching stuff out of the repository.
+    2. Validating the input and making assertions about the request against the current database state.
+    3. Calling a service.
+    4. If everything works well, save/update the new state.
 ### protobuf folder
-**GRPC** is the interservice communication framework which was selected, to allow our services to talk to each other. 
+**GRPC** is the inter-service communication framework which was selected, to allow our services to talk to each other. 
 GRPC uses the fast HTTP/2 binary protocol, and also makes use of Google’s Protocol Buffers. The idea here was to have a central place for all service definitions/proto files. 
-As this is just a small demo project we put all proto files inside a folder. For bigger projects, a common practice is to store them in a central Git repository.
+As this is just a small demo project, we put all proto files inside a folder. For bigger projects, a common practice is to store them in a central Git repository.
 ### kubernetes
 TODO
 
