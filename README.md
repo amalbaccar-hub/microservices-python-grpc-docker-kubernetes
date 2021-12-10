@@ -32,5 +32,26 @@ In real world applications, such files **MUST NOT BE COMMITED** to subversion co
 ## Architecture diagram
 ![](global_architecture_diagram.png)
 
+Database per service pattern was adopted.
+
 ## Project structure
+### customer and payment folders
+Each microservice was put in a seperate directory/package. Same approach was used internally for both microservices in order to build their architecture.
+Two key design patterns were applied: 
+- The **repository pattern**: is an abstraction over data storage. It decouples the domain model layer from the data layer making the system more testable and hiding the complexities of the database. 
+- The **service layer pattern**: the role of service layer is to seperate **'stuff that talks http or http/2'** from **'stuff that talks domain models'**. 
+It's also known as **orchestration pattern** because it's mission is in general to orchestrate operations and workflows of the system. 
+Typical service layer function performs the following steps:
+1. Fetching stuff out of the repository.
+2. Validating the input and making assertions about the request against the current database state.
+3. Calling a service.
+4. If everything works well, save/update the new state.
+### protobuf folder
+**GRPC** is the interservice communication framework which was selected, to allow our services to talk to each other. 
+GRPC uses the fast HTTP/2 binary protocol, and also makes use of Google’s Protocol Buffers. The idea here was to have a central place for all service definitions/proto files. 
+As this is just a small demo project we put all proto files inside a folder. For bigger projects, a common practice is to store them in a central Git repository.
+### kubernetes
 TODO
+
+
+
