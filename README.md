@@ -36,16 +36,21 @@ We adopted database per service pattern.
 
 ## Project structure
 ### customer and payment folders
-We put each microservice in a separate directory/package. The same approach was used internally for both microservices in order to build their architecture.
+We put each microservice in a separate directory/package. We designed both microservices internally the same way.
 We applied two key design patterns : 
 - The **repository pattern**: is an abstraction over data storage. It decouples the domain model layer from the data layer making the system more testable and hiding the complexities of the database. 
 - The **service layer pattern**: the role of service layer is to separate **'stuff that talks http or http/2'** from **'stuff that talks domain models'**. 
-It's also known as **orchestration pattern** because it's mission is in general to orchestrate operations and workflows of the system. 
-Typical service layer function performs the following steps:
+It's also known as **orchestration pattern** because it orchestrates operations and workflows of the system. 
+Typical service layer functions/classes performs the following steps:
     1. Fetching stuff out of the repository.
     2. Validating the input and making assertions about the request against the current database state.
     3. Calling a service.
     4. If everything works well, save/update the new state.
+This resulted in having **4 layers** for each microservice:
+    - Domain models layer
+    - Repository layer
+    - Service layer
+    - API layer
 ### protobuf folder
 **GRPC** is the inter-service communication framework which was selected, to allow our services to talk to each other. 
 GRPC uses the fast HTTP/2 binary protocol, and also makes use of Google’s Protocol Buffers. The idea here was to have a central place for all service definitions/proto files. 
