@@ -46,7 +46,9 @@ Typical service layer functions/classes performs the following steps:
     2. Validating the input and making assertions about the request against the current database state.
     3. Calling a service.
     4. If everything works well, save/update the new state.
+
 This resulted in having **4 layers** for each microservice:
+
     - Domain models layer
     - Repository layer
     - Service layer
