@@ -36,7 +36,16 @@ We adopted database per service pattern.
 
 ## Project structure
 ### customer and payment folders
-We put each microservice in a separate directory/package. We designed both microservices internally the same way.
+We put each microservice in a separate directory/package.
+### protobuf folder
+**GRPC** is the inter-service communication framework which was selected, to allow our services to talk to each other. 
+GRPC uses the fast HTTP/2 binary protocol, and also makes use of Google’s Protocol Buffers. The idea here was to have a central place for all service definitions/proto files. 
+As this is just a small demo project, we put all proto files inside a folder. For bigger projects, a common practice is to store them in a central Git repository.
+### kubernetes folder
+TODO
+
+## Component diagram for the microservices
+We designed both microservices internally the same way.
 We applied two key design patterns : 
 - The **repository pattern**: is an abstraction over data storage. It decouples the domain model layer from the data layer making the system more testable and hiding the complexities of the database. 
 - The **service layer pattern**: the role of service layer is to separate **'stuff that talks http or http/2'** from **'stuff that talks domain models'**. 
@@ -53,12 +62,10 @@ This resulted in having **4 layers** for each microservice:
     - Repository layer
     - Service layer
     - API layer
-### protobuf folder
-**GRPC** is the inter-service communication framework which was selected, to allow our services to talk to each other. 
-GRPC uses the fast HTTP/2 binary protocol, and also makes use of Google’s Protocol Buffers. The idea here was to have a central place for all service definitions/proto files. 
-As this is just a small demo project, we put all proto files inside a folder. For bigger projects, a common practice is to store them in a central Git repository.
-### kubernetes
-TODO
+   
+![](microservice_internal_architecture.png)
+
+
 
 
 
